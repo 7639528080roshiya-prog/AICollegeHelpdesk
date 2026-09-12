@@ -1,8 +1,39 @@
 from flask import Flask, render_template, request, redirect, jsonify, session
-import os
+import os, sqlite3, json
+
 app = Flask(__name__)
 app.secret_key = "gct_final_both_pass"
 os.makedirs('staff_files', exist_ok=True)
+
+# --- SQLITE DB SETUP DA ---
+DB_NAME = "gct_college.db"
+
+def init_db():
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS staff_data (id TEXT PRIMARY KEY, data TEXT)''')
+    conn.commit()
+    conn.close()
+
+def load_data():
+    init_db()
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("SELECT data FROM staff_data WHERE id='main'")
+    row = c.fetchone()
+    conn.close()
+    if row:
+        return json.loads(row[0])
+    else:
+        return None
+
+def save_to_db(data):
+    init_db()
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("INSERT OR REPLACE INTO staff_data (id, data) VALUES (?,?)", ('main', json.dumps(data)))
+    conn.commit()
+    conn.close()
 
 DATA = {
   'college name': 'Government College of Technology, Coimbatore',
@@ -11,7 +42,8 @@ DATA = {
   'ug_courses': 'B.E CSE, ECE, Mechanical, Civil, EEE', 'pg_courses': 'M.E CSE, MBA, MCA',
   'timing': '8:30 AM to 4:30 PM', 'facilities': 'Library, Hostel, Labs', 'hostel': 'Hostel available'
 }
-STAFF_DATA = {
+
+DEFAULT_STAFF_DATA = {
   "admission": "UG Admission 2026 open", "naan_mudhalvan": "Naan Mudhalvan Scheme - Skill Training",
   "exam_fees": "UG Rs.1500/sem, PG Rs.2000/sem", "announcement": "Welcome!",
   "students": {}, "results": {}, "staff_list": {}, "hod_list": {},
@@ -20,13 +52,13 @@ STAFF_DATA = {
       "ECE002": {"title": "Digital Electronics", "author": "Morris Mano", "dept": "ECE", "total": 5, "available": 5},
       "MECH01": {"title": "Thermodynamics", "author": "Cengel", "dept": "Mechanical", "total": 8, "available": 8}
   },
-  "game_results": [],
-  "attendance": {},
-  "fees_paid": {},
-  "complaints": [],
-  "placements": [],
-  "events": []
+  "game_results": [], "attendance": {}, "fees_paid": {}, "complaints": [], "placements": [], "events": []
 }
+
+loaded = load_data()
+STAFF_DATA = loaded if loaded else DEFAULT_STAFF_DATA
+if not loaded:
+    save_to_db(STAFF_DATA)
 
 STAFF_PASS = "staff123"
 PRINCIPAL_PASS = "gct123"
@@ -35,7 +67,6 @@ PRINCIPAL_PASS = "gct123"
 def home(): return render_template('home.html', username=session.get('user','Guest'), data=DATA, staff_data=STAFF_DATA)
 @app.route('/student')
 def student(): return render_template('student.html', data=DATA, staff_data=STAFF_DATA)
-
 @app.route('/staff', methods=['GET','POST'])
 def staff():
     if request.method == 'POST':
@@ -45,15 +76,8 @@ def staff():
         else:
             return f"<h3>Wrong Password staff123</h3><a href='/staff'>Try Again</a>"
     if not session.get('is_staff') and not session.get('is_principal'):
-        return '''
-        <body style="text-align:center;padding:50px;background:#e8f5e9">
-        <h2>👨‍🏫 Staff Login</h2>
-        <form method="POST"><input type="password" name="password" placeholder="Password" style="padding:12px;width:260px" required><br><br>
-        <button style="padding:12px 30px;background:#4CAF50;color:white;border:none;border-radius:8px">Login</button></form>
-        <p>Password: <b>staff123</b></p><a href="/">Home</a></body>
-        '''
+        return '''<body style="text-align:center;padding:50px;background:#e8f5e9"><h2>👨‍🏫 Staff Login</h2><form method="POST"><input type="password" name="password" placeholder="Password" style="padding:12px;width:260px" required><br><br><button style="padding:12px 30px;background:#4CAF50;color:white;border:none;border-radius:8px">Login</button></form><p>Password: <b>staff123</b></p><a href="/">Home</a></body>'''
     return render_template('staff.html', data=DATA, staff_data=STAFF_DATA)
-
 @app.route('/principal', methods=['GET','POST'])
 def principal():
     if request.method == 'POST':
@@ -64,73 +88,53 @@ def principal():
         else:
             return f"<h3>Wrong Password gct123</h3><a href='/principal'>Try Again</a>"
     if not session.get('is_principal'):
-        return '''
-        <body style="text-align:center;padding:50px;background:#ffebee">
-        <h2>🔐 Principal Login</h2>
-        <form method="POST"><input type="password" name="password" placeholder="Password" style="padding:12px;width:260px" required><br><br>
-        <button style="padding:12px 30px;background:#d32f2f;color:white;border:none;border-radius:8px">Login</button></form>
-        <p>Password: <b>gct123</b></p><a href="/">Home</a></body>
-        '''
+        return '''<body style="text-align:center;padding:50px;background:#ffebee"><h2>🔐 Principal Login</h2><form method="POST"><input type="password" name="password" placeholder="Password" style="padding:12px;width:260px" required><br><br><button style="padding:12px 30px;background:#d32f2f;color:white;border:none;border-radius:8px">Login</button></form><p>Password: <b>gct123</b></p><a href="/">Home</a></body>'''
     return render_template('principal.html', data=DATA, staff_data=STAFF_DATA)
-
 @app.route('/library')
 def library(): return render_template('library.html', data=DATA, staff_data=STAFF_DATA)
 @app.route('/games')
 def games(): return render_template('games.html', data=DATA, staff_data=STAFF_DATA)
-
 @app.route('/games/save', methods=['POST'])
 def save_game_result():
     if not session.get('is_staff') and not session.get('is_principal'): return "Staff Only"
-    STAFF_DATA['game_results'].append({
-        "game": request.form.get('game',''), "winner": request.form.get('winner',''),
-        "dept": request.form.get('dept','CSE'), "prize": request.form.get('prize','1st Prize')
-    })
-    return redirect('/principal' if session.get('is_principal') else '/staff')
-
+    STAFF_DATA['game_results'].append({"game": request.form.get('game',''), "winner": request.form.get('winner',''), "dept": request.form.get('dept','CSE'), "prize": request.form.get('prize','1st Prize')})
+    save_to_db(STAFF_DATA); return redirect('/principal' if session.get('is_principal') else '/staff')
 @app.route('/attendance/save', methods=['POST'])
 def save_attendance():
     if not session.get('is_staff') and not session.get('is_principal'): return "Staff Only"
-    roll = request.form.get('roll','').upper().strip()
-    STAFF_DATA['attendance'][roll] = request.form.get('percent','0')
+    roll = request.form.get('roll','').upper().strip(); STAFF_DATA['attendance'][roll] = request.form.get('percent','0'); save_to_db(STAFF_DATA)
     return redirect('/principal' if session.get('is_principal') else '/staff')
-
 @app.route('/fees/save', methods=['POST'])
 def save_fees():
     if not session.get('is_staff') and not session.get('is_principal'): return "Staff Only"
-    roll = request.form.get('roll','').upper().strip()
-    STAFF_DATA['fees_paid'][roll] = {"amount": request.form.get('amount',''), "status": request.form.get('status','Paid')}
+    roll = request.form.get('roll','').upper().strip(); STAFF_DATA['fees_paid'][roll] = {"amount": request.form.get('amount',''), "status": request.form.get('status','Paid')}; save_to_db(STAFF_DATA)
     return redirect('/principal' if session.get('is_principal') else '/staff')
-
 @app.route('/complaint', methods=['GET','POST'])
 def complaint():
     if request.method == 'POST':
-        STAFF_DATA['complaints'].append({"roll": request.form.get('roll','Anonymous'), "msg": request.form.get('msg','')})
+        STAFF_DATA['complaints'].append({"roll": request.form.get('roll','Anonymous'), "msg": request.form.get('msg','')}); save_to_db(STAFF_DATA)
         return "<h3>Complaint Sent! ✅ <a href='/'>Home</a></h3>"
     return render_template('complaint.html', staff_data=STAFF_DATA)
-
 @app.route('/placement', methods=['GET','POST'])
 def placement():
     if request.method == 'POST':
         if not session.get('is_staff') and not session.get('is_principal'): return "Staff Only"
-        STAFF_DATA['placements'].append({"company": request.form.get('company',''), "package": request.form.get('package',''), "students": request.form.get('students','')})
+        STAFF_DATA['placements'].append({"company": request.form.get('company',''), "package": request.form.get('package',''), "students": request.form.get('students','')}); save_to_db(STAFF_DATA)
         return redirect('/placement')
     return render_template('placement.html', staff_data=STAFF_DATA, data=DATA)
-
 @app.route('/events', methods=['GET','POST'])
 def events():
     if request.method == 'POST':
         if not session.get('is_principal'): return "Principal Only"
-        STAFF_DATA['events'].append({"title": request.form.get('title',''), "date": request.form.get('date',''), "dept": request.form.get('dept','')})
+        STAFF_DATA['events'].append({"title": request.form.get('title',''), "date": request.form.get('date',''), "dept": request.form.get('dept','')}); save_to_db(STAFF_DATA)
         return redirect('/principal')
     return render_template('events.html', staff_data=STAFF_DATA, data=DATA)
-
 @app.route('/logout')
 def logout(): session.clear(); return redirect('/')
 @app.route('/principal/logout')
 def principal_logout(): session.clear(); return redirect('/')
 @app.route('/staff/logout')
 def staff_logout(): session.clear(); return redirect('/')
-
 @app.route('/staff/upload', methods=['POST'])
 def staff_upload():
     typ = request.form.get('type')
@@ -142,33 +146,24 @@ def staff_upload():
     elif typ == 'naan_mudhalvan': STAFF_DATA['naan_mudhalvan'] = request.form.get('text','')
     elif typ == 'exam_fees': STAFF_DATA['exam_fees'] = request.form.get('text','')
     elif typ == 'exam_result':
-        roll = request.form.get('roll','').strip().upper()
-        STAFF_DATA['results'][roll] = {'cgpa': request.form.get('cgpa',''),'result': request.form.get('result',''),'dept': request.form.get('dept','CSE')}
+        roll = request.form.get('roll','').strip().upper(); STAFF_DATA['results'][roll] = {'cgpa': request.form.get('cgpa',''),'result': request.form.get('result',''),'dept': request.form.get('dept','CSE')}
     elif typ == 'staff_details':
-        sid = request.form.get('staff_id','').strip().upper()
-        STAFF_DATA['staff_list'][sid] = {'name': request.form.get('name',''),'dept': request.form.get('dept','CSE'),'designation': request.form.get('designation','')}
-    elif typ == 'hod_details':
-        STAFF_DATA['hod_list'][request.form.get('dept','CSE')] = {'name': request.form.get('name',''),'exp': request.form.get('exp',''),'contact': request.form.get('contact','')}
+        sid = request.form.get('staff_id','').strip().upper(); STAFF_DATA['staff_list'][sid] = {'name': request.form.get('name',''),'dept': request.form.get('dept','CSE'),'designation': request.form.get('designation','')}
+    elif typ == 'hod_details': STAFF_DATA['hod_list'][request.form.get('dept','CSE')] = {'name': request.form.get('name',''),'exp': request.form.get('exp',''),'contact': request.form.get('contact','')}
     elif typ == 'student_details':
-        roll = request.form.get('roll','').strip().upper()
-        STAFF_DATA['students'][roll] = {'name': request.form.get('name',''),'dept': request.form.get('dept','CSE'),'year': request.form.get('year','')}
-    return redirect('/principal' if session.get('is_principal') else '/staff')
-
+        roll = request.form.get('roll','').strip().upper(); STAFF_DATA['students'][roll] = {'name': request.form.get('name',''),'dept': request.form.get('dept','CSE'),'year': request.form.get('year','')}
+    save_to_db(STAFF_DATA); return redirect('/principal' if session.get('is_principal') else '/staff')
 @app.route('/get_result', methods=['POST'])
 def get_result():
-    roll = request.form.get('roll','').strip().upper()
-    res = STAFF_DATA['results'].get(roll)
+    roll = request.form.get('roll','').strip().upper(); res = STAFF_DATA['results'].get(roll)
     if res: return jsonify({"found": True, "roll": roll, "data": res, "student": STAFF_DATA['students'].get(roll)})
     else: return jsonify({"found": False})
-
 @app.route('/chatbot')
 def chatbot(): return render_template('index.html', username='admin')
 @app.route('/login')
 def login(): return redirect('/')
 @app.route('/language', methods=['GET','POST'])
 def language(): return render_template('language.html')
-
-# --- LIVE CHATBOX UPDATED ---
 @app.route('/chat', methods=['POST'])
 def chat():
     user_msg = request.json.get('message','').lower()
