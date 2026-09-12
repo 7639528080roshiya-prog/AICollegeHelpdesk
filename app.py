@@ -1,39 +1,16 @@
 from flask import Flask, render_template, request, redirect, jsonify, session
-import os, sqlite3, json
+import os
+from pymongo import MongoClient
 
 app = Flask(__name__)
 app.secret_key = "gct_final_both_pass"
 os.makedirs('staff_files', exist_ok=True)
 
-# --- SQLITE DB SETUP DA ---
-DB_NAME = "gct_college.db"
-
-def init_db():
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS staff_data (id TEXT PRIMARY KEY, data TEXT)''')
-    conn.commit()
-    conn.close()
-
-def load_data():
-    init_db()
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("SELECT data FROM staff_data WHERE id='main'")
-    row = c.fetchone()
-    conn.close()
-    if row:
-        return json.loads(row[0])
-    else:
-        return None
-
-def save_to_db(data):
-    init_db()
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("INSERT OR REPLACE INTO staff_data (id, data) VALUES (?,?)", ('main', json.dumps(data)))
-    conn.commit()
-    conn.close()
+# --- MONGODB CONNECTION DA - STAFF KETTA VERSION ---
+MONGO_URI = "mongodb+srv://7639528080roshiya_db_user:MsJY6gC5sBDI4SU1@cluster0.i2b7x0u.mongodb.net/?appName=Cluster0"
+client = MongoClient(MONGO_URI)
+db = client['gct_college_db']
+collection = db['college_data']
 
 DATA = {
   'college name': 'Government College of Technology, Coimbatore',
@@ -44,6 +21,7 @@ DATA = {
 }
 
 DEFAULT_STAFF_DATA = {
+  "_id": "main_data",
   "admission": "UG Admission 2026 open", "naan_mudhalvan": "Naan Mudhalvan Scheme - Skill Training",
   "exam_fees": "UG Rs.1500/sem, PG Rs.2000/sem", "announcement": "Welcome!",
   "students": {}, "results": {}, "staff_list": {}, "hod_list": {},
@@ -55,11 +33,22 @@ DEFAULT_STAFF_DATA = {
   "game_results": [], "attendance": {}, "fees_paid": {}, "complaints": [], "placements": [], "events": []
 }
 
-loaded = load_data()
-STAFF_DATA = loaded if loaded else DEFAULT_STAFF_DATA
-if not loaded:
-    save_to_db(STAFF_DATA)
+def load_data():
+    try:
+        data = collection.find_one({"_id": "main_data"})
+        if data: return data
+        else:
+            collection.insert_one(DEFAULT_STAFF_DATA)
+            return DEFAULT_STAFF_DATA
+    except:
+        return DEFAULT_STAFF_DATA
 
+def save_to_db(data):
+    try:
+        collection.update_one({"_id": "main_data"}, {"$set": data}, upsert=True)
+    except: pass
+
+STAFF_DATA = load_data()
 STAFF_PASS = "staff123"
 PRINCIPAL_PASS = "gct123"
 
