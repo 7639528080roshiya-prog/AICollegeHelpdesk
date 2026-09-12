@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html><head><title>GCT Live Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{margin:0;font-family:Arial;background:#e5ddd5}
+.chat-box{max-width:500px;margin:20px auto;background:white;height:90vh;display:flex;flex-direction:column;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+.header{background:#075e54;color:white;padding:15px;font-weight:bold;display:flex;align-items:center}
+.header span{margin-left:10px}
+.messages{flex:1;padding:15px;overflow-y:auto;background:#e5ddd5}
+.msg{margin:8px 0;padding:10px 14px;border-radius:12px;max-width:70%;word-wrap:break-word}
+.user{background:#dcf8c6;margin-left:auto;text-align:right}
+.bot{background:white;margin-right:auto}
+.input-area{display:flex;padding:10px;background:#f0f0f0}
+.input-area input{flex:1;padding:12px;border-radius:25px;border:1px solid #ccc;outline:none}
+.input-area button{margin-left:10px;padding:12px 20px;background:#075e54;color:white;border:none;border-radius:25px;cursor:pointer}
+.quick{display:flex;gap:6px;padding:8px;overflow-x:auto;background:white}
+.quick button{padding:6px 12px;border:1px solid #075e54;border-radius:15px;background:white;color:#075e54;white-space:nowrap;cursor:pointer}
+</style>
+</head><body>
+<div class="chat-box">
+<div class="header">🟢 <span>GCT Live Chat - Online</span></div>
+<div class="quick">
+<button onclick="sendQuick('Admission')">Admission</button>
+<button onclick="sendQuick('Fees')">Fees</button>
+<button onclick="sendQuick('Library')">Library</button>
+<button onclick="sendQuick('Games')">Games</button>
+<button onclick="sendQuick('Placement')">Placement</button>
+<button onclick="sendQuick('Contact')">Contact</button>
+</div>
+<div class="messages" id="msgs">
+<div class="msg bot">Vanakkam da! 🙏 Naan GCT Chatbot! Enna venum kelu - Admission, Fees, Library lam solluven!</div>
+</div>
+<div class="input-area">
+<input id="inp" placeholder="Message type pannu da..." onkeypress="if(event.key==='Enter')sendMsg()">
+<button onclick="sendMsg()">Send</button>
+</div>
+</div>
+<script>
+function addMsg(text,cls){let d=document.createElement('div');d.className='msg '+cls;d.innerText=text;document.getElementById('msgs').appendChild(d);document.getElementById('msgs').scrollTop=99999}
+async function sendMsg(){
+ let inp=document.getElementById('inp'); let t=inp.value.trim(); if(!t)return;
+ addMsg(t,'user'); inp.value='';
+ let r=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})});
+ let data=await r.json(); setTimeout(()=>addMsg(data.reply,'bot'),500);
+}
+function sendQuick(t){document.getElementById('inp').value=t;sendMsg()}
+</script>
+</body></html>

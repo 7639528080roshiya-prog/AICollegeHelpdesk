@@ -1,0 +1,10 @@
+College Name: Government College of Technology, Coimbatore
+Principal: Dr. K. Manonmani, M.E., Ph.D
+Contact: 0422-2432221
+Location: Thadagam Road, Coimbatore - 641013
+About: GCT Coimbatore is a top-ranked government engineering college established in 1945. Famous for placement in TCS, Infosys, Wipro and high-tech labs.
+Courses: B.E CSE, B.E ECE, B.E Mechanical, B.E Civil, MBA, MCA
+Fees: B.E - Rs. 12000/year, MBA - Rs. 25000/year
+Hostel: Rs. 15000/year with food and WiFi
+Facilities: Central Library, Placement Cell, Hostel, Canteen, Research Labs, Sports Complex
+Timing: 8:30 AM to 4:30 PM

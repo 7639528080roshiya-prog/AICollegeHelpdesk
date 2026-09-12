@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html><head><title>Admin</title>
+<style>body{background:#0f172a;color:white;font-family:Segoe UI;padding:20px}.card{background:#1e293b;padding:15px;border-radius:10px;margin-bottom:10px}</style>
+</head><body>
+<h2>Admin Panel 👑</h2><p>Total Users: {{users|length}} | <a href="/logout" style="color:#38bdf8;">Logout</a></p>
+<h3>Chat History</h3>
+{% for h in history %}
+<div class="card"><b>{{h.user}} ({{h.lang}})</b>: {{h.msg}}<br><span style="color:#38bdf8;">Bot: {{h.reply}}</span></div>
+{% endfor %}
+</body></html>

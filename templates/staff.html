@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><title>Staff Panel</title>
+<style>body{font-family:Arial;background:#f5f5f5;padding:20px}.card{background:white;padding:15px;border-radius:10px;margin:10px 0}input,select{padding:8px;margin:5px;border-radius:5px;border:1px solid #ccc}.btn{padding:8px 15px;border:none;border-radius:6px;color:white;cursor:pointer}.green{background:#4CAF50}.red{background:#d32f2f}.blue{background:#2196F3}</style>
+</head><body>
+<h2>👨‍🏫 Staff Panel - Limited Access</h2>
+<a href="/"><button class="btn blue">Home</button></a> <a href="/staff/logout"><button class="btn red">Logout</button></a>
+
+<div class="card" style="border-left:5px solid #4CAF50">
+<h3>📊 Attendance Save (Staff Access ✅)</h3>
+<form action="/attendance/save" method="POST"><input name="roll" placeholder="Roll No" required><input name="percent" placeholder="Percentage 75" required><button class="btn green">Save</button></form>
+<p>Saved: {{staff_data['attendance']|length}} students</p>
+</div>
+
+<div class="card" style="border-left:5px solid #FF9800">
+<h3>💳 Fees Save (Staff Access ✅)</h3>
+<form action="/fees/save" method="POST"><input name="roll" placeholder="Roll No" required><input name="amount" placeholder="Amount 1500"><select name="status"><option>Paid</option><option>Pending</option></select><button class="btn green">Save Fees</button></form>
+</div>
+
+<div class="card" style="border-left:5px solid #9c27b0">
+<h3>🏆 Games Result Save (Staff Access ✅)</h3>
+<form action="/games/save" method="POST"><select name="game"><option>Kabaddi</option><option>Football</option><option>Cricket</option><option>Chess</option></select><input name="winner" placeholder="Winner Name" required><input name="dept" placeholder="Dept"><select name="prize"><option>1st Prize</option><option>2nd</option><option>3rd</option></select><button class="btn green">Save Game</button></form>
+</div>
+
+<div class="card" style="border-left:5px solid #e91e63">
+<h3>💼 Placement Save (Staff Access ✅)</h3>
+<form action="/placement" method="POST"><input name="company" placeholder="Company TCS" required><input name="package" placeholder="Package 7 LPA"><input name="students" placeholder="Students CSE01, CSE02"><button class="btn green">Add Placement</button></form>
+</div>
+
+<div class="card" style="background:#ffebee"><h3>🔒 No Access</h3><p>Complaints, Events, Staff/HOD add panna Principal than pannanum - Principal Login: gct123</p></div>
+
+<div class="card"><h3>📚 Info</h3><p>Admission: {{staff_data['admission']}}</p></div>
+</body></html>

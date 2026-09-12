@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GCT Games - Result Save</title>
+<style>
+body{font-family:Arial;background:#f5f5f5;margin:0;padding:20px}
+.card{background:white;padding:20px;border-radius:12px;margin:15px 0;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.btn{padding:10px 20px;border:none;border-radius:8px;color:white;cursor:pointer;margin:5px}
+.green{background:#4CAF50}.blue{background:#2196F3}.red{background:#d32f2f}.purple{background:#9c27b0}.orange{background:#FF9800}
+.top{background:#9c27b0;color:white;padding:12px 20px;border-radius:10px;text-align:center}
+input,select{width:100%;padding:10px;margin:6px 0;border-radius:6px;border:1px solid #ccc}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #ccc;padding:8px;text-align:left} th{background:#9c27b0;color:white}
+</style>
+</head>
+<body>
+
+<div class="top">
+<h2>🏆 GCT College Games - Result Save Pannu</h2>
+</div>
+
+<div style="text-align:center;margin:15px">
+<a href="/"><button class="btn blue">🏠 Home</button></a>
+<a href="/staff"><button class="btn green">Staff Login</button></a>
+</div>
+
+<!-- STAFF / PRINCIPAL MATTUM RESULT SAVE PANNALAM -->
+<div class="card" style="border-left:5px solid #4CAF50">
+<h3>🏅 Game Result Save - Staff/Principal Only</h3>
+<form action="/games/save" method="POST">
+<select name="game" required>
+<option value="">Game Select Pannu</option>
+<option>Kabaddi</option><option>Football</option><option>Cricket</option>
+<option>Volleyball</option><option>Basketball</option>
+<option>100m Race</option><option>200m Race</option><option>Relay</option>
+<option>Long Jump</option><option>Chess</option><option>Carrom</option>
+</select>
+<input name="winner" placeholder="Winner Name / Roll No - Ex: Arjun 21CSE01" required>
+<select name="dept"><option>CSE</option><option>ECE</option><option>Mechanical</option><option>Civil</option><option>EEE</option><option>MBA</option></select>
+<select name="prize"><option>1st Prize 🥇</option><option>2nd Prize 🥈</option><option>3rd Prize 🥉</option></select>
+<button class="btn green">Save Result 💾</button>
+</form>
+<p style="color:gray;font-size:12px">Staff Password: staff123 / Principal: gct123</p>
+</div>
+
+<!-- SAVED RESULTS DISPLAY -->
+<div class="card">
+<h3>📋 College Games Results - Saved List ({{staff_data['game_results']|length}})</h3>
+<table>
+<tr><th>Game</th><th>Winner</th><th>Dept</th><th>Prize</th></tr>
+{% for r in staff_data['game_results'] %}
+<tr><td>{{r.game}}</td><td><b>{{r.winner}}</b></td><td>{{r.dept}}</td><td>{{r.prize}}</td></tr>
+{% endfor %}
+{% if staff_data['game_results']|length == 0 %}
+<tr><td colspan="4" style="text-align:center;color:gray">No results yet - Staff add pannunga!</td></tr>
+{% endif %}
+</table>
+</div>
+
+<div class="card" style="background:#f3e5f5">
+<h3>ℹ️ Info</h3>
+<p>College Annual Sports Meet 2026 - Results will be displayed here. Staff can login and add winners.</p>
+</div>
+
+</body>
+</html>

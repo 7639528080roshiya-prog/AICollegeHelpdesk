@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Library Books</title>
+<style>
+body{font-family:Arial;background:#f5f5f5;margin:0;padding:20px}
+.top{background:#6a1b9a;color:white;padding:12px 20px;border-radius:10px;text-align:center}
+.card{background:white;padding:20px;border-radius:12px;margin:15px 0;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.book{background:#f3e5f5;padding:15px;border-radius:10px;margin:10px 0;border-left:5px solid #6a1b9a;display:flex;justify-content:space-between;align-items:center}
+.btn{padding:10px 20px;border:none;border-radius:8px;color:white;cursor:pointer}
+.purple{background:#6a1b9a} .blue{background:#0d47a1}
+</style>
+</head>
+<body>
+
+<div class="top">
+<h2>📚 GCT LIBRARY BOOKS</h2>
+</div>
+
+<div style="text-align:center;margin:15px">
+<a href="/"><button class="btn blue">🏠 Home</button></a>
+</div>
+
+<div class="card">
+<h3>📖 Available Books - {{staff_data['library_books']|length}} Books</h3>
+
+{% for id, b in staff_data['library_books'].items() %}
+<div class="book">
+<div>
+<b style="color:#6a1b9a">{{id}}</b><br>
+<b>{{b.title}}</b><br>
+Author: {{b.author}} | Dept: {{b.dept}}
+</div>
+<div style="text-align:right">
+<b style="color:green">{{b.available}} / {{b.total}}</b><br>
+Available
+</div>
+</div>
+{% endfor %}
+
+{% if staff_data['library_books']|length == 0 %}
+<p>No books added yet!</p>
+{% endif %}
+</div>
+
+<div class="card" style="background:#f3e5f5">
+<h3>📚 Library Info</h3>
+<p><b>Timing:</b> 9 AM to 5 PM</p>
+<p><b>Rules:</b> 1 Book per student - 15 days return</p>
+<p><b>Contact:</b> Library - GCT Block</p>
+</div>
+
+</body>
+</html>
