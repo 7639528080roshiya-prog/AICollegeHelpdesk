@@ -1,26 +1,925 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body{background:#0f172a;color:white;display:flex;justify-content:center;align-items:center;height:100vh;font-family:Segoe UI;margin:0}
-.box{background:#1e293b;padding:30px;border-radius:15px;width:320px}
-input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:none;background:#0f172a;color:white;box-sizing:border-box}
-button{width:100%;padding:12px;background:#38bdf8;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:10px;font-size:16px}
-a{color:#38bdf8;text-decoration:none;font-size:14px}
-h2{text-align:center;color:#38bdf8}
-</style>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>GCT SmartDesk - Login</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(99,102,241,.25), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(168,85,247,.22), transparent 30%),
+                linear-gradient(135deg, #07111f, #101a35 50%, #160d2b);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px;
+
+            color: white;
+
+            overflow-x: hidden;
+        }
+
+
+        /* Background glowing circles */
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(2px);
+            opacity: .35;
+            pointer-events: none;
+        }
+
+        .orb1 {
+            width: 280px;
+            height: 280px;
+            background: #6366f1;
+            top: -100px;
+            left: -80px;
+        }
+
+        .orb2 {
+            width: 230px;
+            height: 230px;
+            background: #a855f7;
+            bottom: -80px;
+            right: -50px;
+        }
+
+        .orb3 {
+            width: 130px;
+            height: 130px;
+            background: #22d3ee;
+            top: 30%;
+            right: 10%;
+            opacity: .12;
+        }
+
+
+        /* Main container */
+
+        .container {
+            width: 100%;
+            max-width: 1050px;
+
+            min-height: 650px;
+
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+
+            background: rgba(255,255,255,.08);
+
+            border: 1px solid rgba(255,255,255,.15);
+
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+
+            border-radius: 30px;
+
+            box-shadow:
+                0 30px 80px rgba(0,0,0,.45);
+
+            overflow: hidden;
+
+            position: relative;
+            z-index: 2;
+        }
+
+
+        /* Left section */
+
+        .left {
+            padding: 60px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(99,102,241,.18),
+                    rgba(168,85,247,.08)
+                );
+        }
+
+
+        /* Logo */
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 45px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 14px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 23px;
+            font-weight: bold;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #a855f7
+                );
+
+            box-shadow:
+                0 10px 30px rgba(99,102,241,.35);
+        }
+
+        .logo-text {
+            font-size: 17px;
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+        }
+
+        .logo-text span {
+            color: #a5b4fc;
+        }
+
+
+        /* Left heading */
+
+        .left h1 {
+            font-size: 48px;
+            line-height: 1.08;
+
+            max-width: 520px;
+
+            margin-bottom: 20px;
+
+            letter-spacing: -1.5px;
+        }
+
+        .left h1 span {
+            background:
+                linear-gradient(
+                    90deg,
+                    #818cf8,
+                    #c084fc,
+                    #67e8f9
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .description {
+            color: #cbd5e1;
+
+            font-size: 16px;
+
+            line-height: 1.7;
+
+            max-width: 480px;
+
+            margin-bottom: 35px;
+        }
+
+
+        /* Features */
+
+        .features {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+
+            max-width: 500px;
+        }
+
+        .feature {
+            padding: 17px;
+
+            border-radius: 17px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            transition: .3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-4px);
+
+            background:
+                rgba(255,255,255,.1);
+        }
+
+        .feature-icon {
+            font-size: 24px;
+
+            margin-bottom: 8px;
+        }
+
+        .feature-title {
+            font-size: 14px;
+            font-weight: 700;
+
+            margin-bottom: 4px;
+        }
+
+        .feature-text {
+            font-size: 12px;
+
+            color: #94a3b8;
+
+            line-height: 1.5;
+        }
+
+
+        /* Right login card */
+
+        .right {
+            background:
+                rgba(3,7,18,.38);
+
+            padding: 60px 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 390px;
+        }
+
+
+        .welcome {
+            font-size: 13px;
+
+            color: #a5b4fc;
+
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 10px;
+        }
+
+        .login-box h2 {
+            font-size: 32px;
+
+            margin-bottom: 10px;
+        }
+
+        .login-subtitle {
+            color: #94a3b8;
+
+            font-size: 14px;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* Error */
+
+        .error {
+            background: rgba(239,68,68,.12);
+
+            border:
+                1px solid rgba(239,68,68,.3);
+
+            color: #fca5a5;
+
+            padding: 12px 14px;
+
+            border-radius: 12px;
+
+            font-size: 13px;
+
+            margin-bottom: 18px;
+        }
+
+
+        /* Input */
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+
+            font-size: 13px;
+
+            color: #cbd5e1;
+
+            margin-bottom: 8px;
+
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+
+            left: 15px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            font-size: 17px;
+
+            opacity: .7;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+
+            padding: 14px 15px 14px 45px;
+
+            background:
+                rgba(255,255,255,.06);
+
+            border:
+                1px solid rgba(255,255,255,.12);
+
+            border-radius: 13px;
+
+            color: white;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: .3s;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #64748b;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #818cf8;
+
+            background:
+                rgba(255,255,255,.09);
+
+            box-shadow:
+                0 0 0 3px rgba(99,102,241,.12);
+        }
+
+
+        /* Login button */
+
+        .login-btn {
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6366f1,
+                    #8b5cf6
+                );
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            margin-top: 5px;
+
+            box-shadow:
+                0 12px 30px rgba(99,102,241,.25);
+
+            transition: .3s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 16px 35px rgba(99,102,241,.35);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+
+        /* Divider */
+
+        .divider {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin: 24px 0;
+
+            color: #64748b;
+
+            font-size: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background:
+                rgba(255,255,255,.1);
+        }
+
+
+        /* Google */
+
+        .google-btn {
+            width: 100%;
+
+            padding: 13px;
+
+            border-radius: 13px;
+
+            border:
+                1px solid rgba(255,255,255,.13);
+
+            background:
+                rgba(255,255,255,.07);
+
+            color: white;
+
+            text-decoration: none;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 11px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition: .3s;
+        }
+
+        .google-btn:hover {
+            background:
+                rgba(255,255,255,.12);
+
+            transform: translateY(-2px);
+        }
+
+        .google-icon {
+            width: 22px;
+            height: 22px;
+
+            background: white;
+
+            color: #4285F4;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: 800;
+
+            font-size: 14px;
+        }
+
+
+        /* Security */
+
+        .security {
+            margin-top: 25px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 7px;
+
+            color: #64748b;
+
+            font-size: 11px;
+        }
+
+
+        /* Footer */
+
+        .footer {
+            margin-top: 28px;
+
+            text-align: center;
+
+            color: #475569;
+
+            font-size: 11px;
+        }
+
+
+        /* Responsive */
+
+        @media (max-width: 850px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+
+                max-width: 520px;
+            }
+
+            .left {
+                padding: 40px 30px;
+
+                text-align: center;
+
+                align-items: center;
+            }
+
+            .logo {
+                margin-bottom: 30px;
+            }
+
+            .left h1 {
+                font-size: 38px;
+            }
+
+            .description {
+                font-size: 14px;
+            }
+
+            .right {
+                padding: 40px 30px;
+            }
+
+            .features {
+                width: 100%;
+            }
+        }
+
+
+        @media (max-width: 480px) {
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .left h1 {
+                font-size: 32px;
+            }
+
+            .login-box h2 {
+                font-size: 27px;
+            }
+        }
+
+    </style>
 </head>
+
+
 <body>
-<div class="box">
-<h2>Login 🔐</h2>
-{% if error %}<p style="color:#f87171;text-align:center">{{error}}</p>{% endif %}
-<form method="POST">
-<input name="username" placeholder="Email or Username" required>
-<input name="password" type="password" placeholder="Password" required>
-<button>Login</button>
-</form>
-<p style="text-align:center;margin-top:15px"><a href="/register">Don't have an account? Register</a></p>
-</div>
+
+    <!-- Background -->
+
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+
+    <!-- Main -->
+
+    <div class="container">
+
+
+        <!-- LEFT -->
+
+        <section class="left">
+
+            <div class="logo">
+
+                <div class="logo-icon">
+                    ✦
+                </div>
+
+                <div class="logo-text">
+                    GCT <span>•</span> SMARTDESK
+                </div>
+
+            </div>
+
+
+            <h1>
+                Your College.
+                <br>
+                <span>One Smart Desk.</span>
+            </h1>
+
+
+            <p class="description">
+                AI-powered college assistance for students
+                and staff. Get academic information, campus
+                services, announcements and instant support
+                from one smart platform.
+            </p>
+
+
+            <div class="features">
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        🤖
+                    </div>
+
+                    <div class="feature-title">
+                        AI Assistant
+                    </div>
+
+                    <div class="feature-text">
+                        Ask questions and get instant
+                        college information.
+                    </div>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        🎓
+                    </div>
+
+                    <div class="feature-title">
+                        Academic Help
+                    </div>
+
+                    <div class="feature-text">
+                        Courses, results, attendance
+                        and academic support.
+                    </div>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        🏫
+                    </div>
+
+                    <div class="feature-title">
+                        Campus Services
+                    </div>
+
+                    <div class="feature-text">
+                        Library, hostel, events,
+                        placement and more.
+                    </div>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ⚡
+                    </div>
+
+                    <div class="feature-title">
+                        Instant Support
+                    </div>
+
+                    <div class="feature-text">
+                        Quick access to important
+                        college information.
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- RIGHT -->
+
+        <section class="right">
+
+            <div class="login-box">
+
+
+                <div class="welcome">
+                    Welcome back 👋
+                </div>
+
+
+                <h2>
+                    Sign in
+                </h2>
+
+
+                <p class="login-subtitle">
+                    Access your SmartDesk account
+                </p>
+
+
+                {% if error %}
+
+                <div class="error">
+                    ⚠️ {{ error }}
+                </div>
+
+                {% endif %}
+
+
+                <!-- LOGIN FORM -->
+
+                <form method="POST"
+                      action="{{ url_for('login') }}">
+
+
+                    <!-- Username -->
+
+                    <div class="input-group">
+
+                        <label for="username">
+                            Username
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                👤
+                            </span>
+
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Enter your username"
+                                autocomplete="username"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Password -->
+
+                    <div class="input-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Login -->
+
+                    <button
+                        type="submit"
+                        class="login-btn">
+
+                        Continue to SmartDesk →
+                        
+                    </button>
+
+                </form>
+
+
+                <!-- Divider -->
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+
+                <!-- Google -->
+
+                <a
+                    href="{{ url_for('google_login') }}"
+                    class="google-btn">
+
+                    <span class="google-icon">
+                        G
+                    </span>
+
+                    <span>
+                        Continue with Google
+                    </span>
+
+                </a>
+
+
+                <!-- Security -->
+
+                <div class="security">
+
+                    <span>🔐</span>
+
+                    <span>
+                        Secure College Portal
+                    </span>
+
+                </div>
+
+
+                <div class="footer">
+
+                    SmartDesk services are ready for you
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+
 </body>
 </html>

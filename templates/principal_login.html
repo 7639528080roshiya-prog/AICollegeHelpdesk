@@ -1,0 +1,7 @@
+﻿<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Principal Login</title></head><body style="text-align:center;padding-top:80px;font-family:Georgia">
+<h2>Principal Login</h2>
+{% if error %}<p style="color:red;background:#fee2e2;padding:8px">{{ error }}</p>{% endif %}
+<form method="POST" action="/principal/verify">
+<input type="password" name="password" placeholder="Enter gct123" required style="padding:10px;width:250px"><br><br>
+<button type="submit" style="padding:8px 30px;background:red;color:white;border:none">Login</button>
+</form></body></html>

@@ -1,43 +1,120 @@
 <!DOCTYPE html>
-<html><head><title>Principal Panel</title>
-<style>body{font-family:Arial;background:#f5f5f5;padding:20px}.card{background:white;padding:15px;border-radius:10px;margin:10px 0}input,select{padding:8px;margin:5px;border-radius:5px;border:1px solid #ccc;width:180px}.btn{padding:8px 15px;border:none;border-radius:6px;color:white;cursor:pointer;margin:2px}.green{background:#4CAF50}.red{background:#d32f2f}.blue{background:#2196F3}</style>
+<html><head><title>Principal FULL ACCESS</title>
+<style>
+body{font-family:Georgia;background:#eef2f7;padding:15px}
+.head{background:#b71c1c;color:white;padding:15px;border-radius:12px;text-align:center}
+.box{background:white;padding:18px;border-radius:12px;margin-top:15px;box-shadow:0 3px 10px rgba(0,0,0,0.15)}
+input,select,textarea{padding:7px;margin:4px;border-radius:6px;border:1px solid #ccc}
+button{padding:7px 14px;border:none;border-radius:6px;color:white;cursor:pointer}
+.b1{background:#c62828} .b2{background:#1565c0} .b3{background:#2e7d32} .b4{background:#ef6c00} .b5{background:#6a1b9a}
+table{width:100%;border-spacing:10px}
+</style>
 </head><body>
-<h2>🔐 Principal Panel - FULL ACCESS</h2>
-<a href="/"><button class="btn blue">Home</button></a> <a href="/principal/logout"><button class="btn red">Logout</button></a>
 
-<div class="card" style="border-left:5px solid #d32f2f;background:#fff3e0">
-<h3>👨‍🏫 Principal Access</h3>
-<p>Staff Management Access Enabled</p>
+<div class="head"><h2>🔐 Principal Panel - FULL ACCESS</h2>Home | Logout | Staff Management Access Enabled ✅</div>
+
+<div class="box" style="border-left:6px solid #c62828">
+<h3>1️⃣ 📊 Attendance Save</h3>
+Roll No <input placeholder="C24UG223CSC028"><br>
+Percentage % <input placeholder="85"><br>
+Date <input type="date"><br>
+<button class="b1">Save Attendance</button> <button class="b2">View Attendance</button> <button class="b3">Edit</button> <button class="b1">Delete</button>
 </div>
 
-<div class="card"><h3>📊 Attendance Save</h3>
-<form action="/attendance/save" method="POST"><input name="roll" placeholder="Roll No" required><input name="percent" placeholder="%" required><button class="btn green">Save</button></form>
+<div class="box" style="border-left:6px solid #ef6c00">
+<h3>2️⃣ 💳 Fees Save</h3>
+Roll No <input><br>
+Amount <input placeholder="1500"><br>
+Type <select><option>Exam Fees</option><option>Tuition</option><option>Hostel</option></select><br>
+Status <select><option>Paid</option><option>Pending</option></select><br>
+<button class="b4">Save Fees</button> <button class="b2">Fees Report</button> <button class="b1">Delete Fees</button>
 </div>
 
-<div class="card"><h3>💳 Fees Save</h3>
-<form action="/fees/save" method="POST"><input name="roll" placeholder="Roll No" required><input name="amount" placeholder="Amount"><select name="status"><option>Paid</option><option>Pending</option></select><button class="btn green">Save</button></form>
+<div class="box" style="border-left:6px solid #6a1b9a">
+<h3>3️⃣ 🏆 Games Result</h3>
+Game Name <select><option>Kabaddi</option><option>Cricket</option><option>Football</option></select><br>
+Winner Name <input><br>
+Dept <input placeholder="CSE"><br>
+Prize <select><option>1st Prize</option><option>2nd Prize</option><option>3rd Prize</option></select><br>
+<button class="b5">Save Game Result</button> <button class="b3">Publish Result</button>
 </div>
 
-<div class="card"><h3>🏆 Games Result</h3>
-<form action="/games/save" method="POST"><select name="game"><option>Kabaddi</option><option>Football</option><option>Cricket</option><option>Chess</option></select><input name="winner" placeholder="Winner" required><input name="dept" placeholder="Dept"><button class="btn green">Save</button></form>
+<div class="box" style="border-left:6px solid #2e7d32">
+<h3>4️⃣ 💼 Placement</h3>
+Company <input placeholder="TCS"><br>
+Package <input placeholder="7 LPA"><br>
+Students List <input placeholder="CSE01, CSE02"><br>
+Year <input placeholder="2026"><br>
+<button class="b3">Add Placement</button> <button class="b2">View Placements</button> <button class="b1">Delete</button>
 </div>
 
-<div class="card"><h3>💼 Placement</h3>
-<form action="/placement" method="POST"><input name="company" placeholder="Company" required><input name="package" placeholder="Package"><input name="students" placeholder="Students"><button class="btn green">Add</button></form>
+<div class="box" style="border-left:6px solid #1565c0">
+<h3>5️⃣ 📢 Complaints</h3>
+<p>No complaints</p>
+Complaint ID <input> Action <select><option>Solved</option><option>Pending</option></select>
+<button class="b2">Update Complaint</button> <button class="b1">Delete Complaint</button> <button class="b3">View All</button>
 </div>
 
-<div class="card" style="border-left:5px solid #795548"><h3>📢 Complaints</h3>
-{% for c in staff_data['complaints'] %}<p><b>{{c.roll}}:</b> {{c.msg}}</p>{% endfor %}{% if staff_data['complaints']|length==0 %}<p>No complaints</p>{% endif %}
+<div class="box" style="border-left:6px solid #ff8f00">
+<h3>6️⃣ 📅 Events Add</h3>
+Event Title <input placeholder="Annual Day"><br>
+Date <input type="date"><br>
+Dept <input><br>
+Venue <input placeholder="Main Auditorium"><br>
+<button class="b4">Add Event</button> <button class="b2">Edit Event</button> <button class="b1">Delete Event</button>
+<p>Total Events: 0</p>
 </div>
 
-<div class="card" style="border-left:5px solid #ff5722"><h3>📅 Events Add</h3>
-<form action="/events" method="POST"><input name="title" placeholder="Event Title" required><input name="date" placeholder="Date" required><input name="dept" placeholder="Dept" required><button class="btn green">Add Event</button></form>
-<p>Total Events: {{staff_data['events']|length}}</p>
+<div class="box" style="border-left:6px solid #c62828">
+<h3>7️⃣ 👨‍🏫 Staff Add</h3>
+Staff ID <input><br>
+Name <input><br>
+Dept <input><br>
+Role <select><option>Staff</option><option>HOD</option></select><br>
+<button class="b1">Add Staff</button> <button class="b2">View Staff</button> <button class="b1">Remove Staff</button>
 </div>
 
-<div class="card"><h3>👨‍🏫 Staff / Student Add</h3>
-<form action="/staff/upload" method="POST"><input type="hidden" name="type" value="staff_details"><input name="staff_id" placeholder="Staff ID"><input name="name" placeholder="Name"><input name="dept" placeholder="Dept"><button class="btn green">Add Staff</button></form>
-<form action="/staff/upload" method="POST"><input type="hidden" name="type" value="student_details"><input name="roll" placeholder="Roll No"><input name="name" placeholder="Name"><input name="dept" placeholder="Dept"><button class="btn green">Add Student</button></form>
+<div class="box" style="border-left:6px solid #2e7d32">
+<h3>8️⃣ 🎓 Student Add</h3>
+Roll No <input><br>
+Name <input><br>
+Dept <input><br>
+Year <select><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option></select><br>
+<button class="b3">Add Student</button> <button class="b2">View Students</button> <button class="b1">Delete Student</button>
 </div>
 
+<div class="box" style="border-left:6px solid #6a1b9a;background:#fff8e1">
+<h3>9️⃣ ➕ EXTRA - Full Power</h3>
+<table>
+<tr style="background:white"><td style="padding:12px;border-radius:8px">
+<b>📚 Library Book Add</b><br><br>
+Book Name: <input placeholder="Book Name" style="width:150px"> 
+Author: <input placeholder="Author" style="width:120px"> 
+<button class="b5">Add Book</button>
+</td></tr>
+<tr style="background:white"><td style="padding:12px;border-radius:8px">
+<b>🎓 Admission Update</b><br><br>
+Text: <input placeholder="UG 2026 Open" style="width:220px"> 
+<button class="b2">Update Admission</button>
+</td></tr>
+<tr style="background:white"><td style="padding:12px;border-radius:8px">
+<b>💼 Naan Mudhalvan Update</b><br><br>
+Text: <input placeholder="Skill Training Update" style="width:220px"> 
+<button class="b3">Update</button>
+</td></tr>
+<tr style="background:white"><td style="padding:12px;border-radius:8px">
+<b>📢 College Notice Publish</b><br><br>
+<textarea placeholder="Important Notice" style="width:90%;height:60px"></textarea><br>
+<button class="b1">Publish Notice</button>
+</td></tr>
+<tr style="background:white"><td style="padding:12px;border-radius:8px">
+<b>👨‍🏫 HOD Add</b><br><br>
+HOD ID: <input placeholder="HOD001" style="width:120px"> 
+Dept: <input placeholder="CSE" style="width:120px"> 
+<button class="b4">Add HOD</button>
+</td></tr>
+</table>
+</div>
+
+<center style="margin-top:20px"><a href="/manage-data">Manage Data</a> | <a href="/">Home</a> | <a href="/logout">Logout</a></center>
 </body></html>
